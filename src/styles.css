@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,400;0,700;1,100&family=Press+Start+2P&family=Ubuntu+Mono&display=swap');
+
+body {
+    background-color: #eadbc8;
+    background-image: url("https://www.transparenttextures.com/patterns/black-thread-light.png");
+    text-align: center;
+    font-family: Ubuntu Mono;
+    justify-content: center;
+    align-items: center;
+}
+
+.my-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.welcome {
+    margin-top: 10px;
+    margin-bottom:30px;
+}
+
+.app {
+    margin-top: 20px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.id {
+    color: red;
+}
+
+.brand-icon:hover {
+    color: orange;
+}
+
+.balance {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    max-width: 20rem;
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    margin-left: 40%;
+}
+
+.accBal {
+    font-size: 1.5em
+}
+
+.transfer {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.donate{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.social{
+    color:white;
+    padding-left:1%;
+    padding-right:1%;
+  }
+.social:hover{
+    color:orange;
+  }
+.footer {
+    background-color: #343a40;
+    margin-top: 10px;
+    color: white;
+}

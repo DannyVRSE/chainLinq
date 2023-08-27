@@ -1,0 +1,8 @@
+type User = record { id : text; username : text; Tokens : nat };
+service : () -> {
+  checkBalance : (text) -> (text) query;
+  checkIfUserExists : (text) -> (bool) query;
+  createUser : (text, text) -> (User);
+  getUserById : (text) -> (text) query;
+  transferTokens : (text, text, float64) -> (float64);
+}
