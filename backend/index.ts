@@ -57,7 +57,7 @@ export function transferTokens(sender: string, receiver: string, amount: number)
         if (checkIfUserExists(receiver)) {
             let senderBal: int = db.users[sender].Tokens;
             let receiverBal: int = db.users[receiver].Tokens
-            if (senderBal < amount) {
+            if (senderBal > amount) {
                 let newSenderBal = senderBal - amountNat;
                 db.users[sender].Tokens = newSenderBal;
                 let newRecieverBal = receiverBal + amountNat;

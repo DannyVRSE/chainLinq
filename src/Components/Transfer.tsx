@@ -30,7 +30,7 @@ function Transfer() {
             } else if (result == 2) {
                 alert("Not Enough Tokens")
             } else if (result == 3) {
-                alert("Receiver does not exist. Kindly check in the profiles list again")
+                alert("Receiver does not exist")
             } else if (result == 4) {
                 alert("Cannot send to self")
             }
