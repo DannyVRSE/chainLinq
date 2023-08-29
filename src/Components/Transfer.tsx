@@ -30,7 +30,7 @@ function Transfer() {
             } else if (result == 2) {
                 alert("Not Enough Tokens")
             } else if (result == 3) {
-                alert("Receiver does not exist")
+                alert("Receiver does not exist, crosscheck the id in the profiles section")
             } else if (result == 4) {
                 alert("Cannot send to self")
             }
@@ -42,12 +42,14 @@ function Transfer() {
     };
 
     return (
-        <div className="transfer">
-            <h2>Transfer Tokens</h2>
+        
+        <div className="section">
+            <div className="inner">
+            <h2>Transfer linqCoin(LNQ)</h2>
             <form onSubmit={transfer}>
                 <div className="mb-3 "><label className="form-label">Receiver ID</label>
                     <input
-                    placeholder="Enter a receiver ID"
+                    placeholder="Enter a receiver ID. You can check if the id exists in the Profiles section at the end 👍"
                         className="form-control"
                         name="receiver"
                         value={receiverId}
@@ -65,9 +67,11 @@ function Transfer() {
                         type="number"
                     /></div>
 
-
-                <button type="submit" className="btn btn-danger">Transfer Tokens</button>
+<h5 className="text-danger">Wait✋ The transfer fee is LNQ 5 🥶</h5>
+                <button type="submit" className="btn btn-warning">Transfer</button>
             </form>
+            </div>
+            
         </div>
     );
 }

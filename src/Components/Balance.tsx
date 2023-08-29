@@ -5,13 +5,24 @@ interface AppProps {
 }
 
 function Balance(props: AppProps) {
-    return (
-        <div className="card text-white bg-success mb-3 balance">
-            <div className="card-body">
-                <h4 className="card-title">Your Balance: </h4>
-                <p className="card-text"><span className="accBal">{"LNQ "+props.value}</span></p>
-            </div>
+    const cardStyle = {
+        maxWidth: '20rem',
+    }
+    const containerStyle = {
+        display: 'flex',
+        justifyContent: 'center', // Horizontally center
+        alignItems: 'center', // Vertically center
+       
+    };
 
+    return (
+        <div style={containerStyle}>
+            <div className="card text-white bg-success mb-3" style={cardStyle}>
+                <div className="card-header">Your balance</div>
+                <div className="card-body">
+                    <p className="card-text"><span className="accBal">{"LNQ " + props.value}</span></p>
+                </div>
+            </div>
         </div>
     )
 }

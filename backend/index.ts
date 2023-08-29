@@ -5,11 +5,11 @@ type Db = {
         [id: string]: User;
     };
 };
-
+//user is identified via an id which is a principal.toString()
 type User = Record<{
     id: string;
     username: string;
-    Tokens: nat;
+    Tokens: string;
 }>;
 //initialize empty database
 let db: Db = {
@@ -17,7 +17,6 @@ let db: Db = {
 };
 
 $query;
-//id is an input parameter from frontend
 export function getUserById(id: string): string {
     const userName = db.users[id].username;
     return userName;
@@ -37,32 +36,61 @@ export function checkIfUserExists(id: string): boolean {
 
 $update;
 export function createUser(id: string, username: string): User {
-    const user:User = {
+    let reward = 100;
+    const user: User = {
         id,
         username,
-        Tokens:100n
+        Tokens: reward.toString()
     };
-    if (checkIfUserExists(id)==false){
+    if (checkIfUserExists(id) == false) {
         db.users[id] = user;
     }
-   
+
     return user;
 }
 
 
+//functions supporting transfer tokens
+
+function stringToBigInt(string_val: string): nat {
+    let val_n = Number(string_val);
+    let val_bigInt = BigInt(val_n);
+    return val_bigInt;
+}
+
+function getBal(id: string): string {
+    let bal: string = db.users[id].Tokens;
+    return bal;
+}
+
+function incReceiverBal(receiver: string, amount: string) {
+    db.users[receiver].Tokens = amount;
+}
+
+function reduceSenderBal(sender: string, amount: string) {
+    db.users[sender].Tokens = amount;
+}
+
+
 $update;
-export function transferTokens(sender: string, receiver: string, amount: number): number{
-    let amountNat=BigInt(amount)
-    if (sender!==receiver){
+export function transferTokens(sender: string, receiver: string, amount: number): number {
+    let fee: nat = 5n;
+
+    let amountNat = BigInt(amount);
+
+    if (sender !== receiver) {
         if (checkIfUserExists(receiver)) {
-            let senderBal: int = db.users[sender].Tokens;
-            let receiverBal: int = db.users[receiver].Tokens
-            if (senderBal > amount) {
-                let newSenderBal = senderBal - amountNat;
-                db.users[sender].Tokens = newSenderBal;
-                let newRecieverBal = receiverBal + amountNat;
-                db.users[receiver].Tokens = newRecieverBal;
-    
+
+            let senderBal = stringToBigInt(getBal(sender));
+            let receiverBal = stringToBigInt(getBal(receiver));
+
+            if (senderBal > amountNat + fee) {
+                let newSenderBal = (senderBal - amountNat - fee).toString();
+                reduceSenderBal(sender, newSenderBal);
+
+                let newReceiverBal = (receiverBal + amountNat).toString();
+                incReceiverBal(receiver, newReceiverBal);
+
                 return 1;
             } else {
                 return 2;
@@ -70,8 +98,14 @@ export function transferTokens(sender: string, receiver: string, amount: number)
         } else {
             return 3;
         }
-    }else{
+    } else {
         return 4;
     }
-    
+
+}
+
+$query;
+export function dbAsString(): string{
+    const serializedDb=JSON.stringify(db, null, 2);
+    return serializedDb;
 }
