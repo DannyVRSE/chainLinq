@@ -27,7 +27,7 @@ function Profiles() {
                 <h2>Accounts</h2>
                 <table className="table">
                     <thead>
-                        <tr>
+                        <tr className="table-primary">
                             <th scope="col">ID</th>
                             <th scope="col">Username</th>
                             <th scope="col">Tokens</th>
