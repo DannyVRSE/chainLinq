@@ -1,6 +1,7 @@
+# This is a prototype dApp built using vite-azle template
 # Vite + Azle
 
-## Getting started
+## Getting started with the template:
 
 Make sure that [Node.js](https://nodejs.org/en/) `>= 16.x` and [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.14.x` are installed on your system.
 

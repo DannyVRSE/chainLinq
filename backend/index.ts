@@ -1,4 +1,4 @@
-import { $query, $update, Record, int, nat } from 'azle';
+/*import { $query, $update, nat} from 'azle';
 
 type Db = {
     users: {
@@ -6,12 +6,12 @@ type Db = {
     };
 };
 //user is identified via an id which is a principal.toString()
-type User = Record<{
+type User ={
     id: string;
     username: string;
     Tokens: string;
-}>;
-//initialize empty database
+};
+
 let db: Db = {
     users: {}
 };
@@ -49,7 +49,6 @@ export function createUser(id: string, username: string): User {
     return user;
 }
 
-
 //functions supporting transfer tokens
 
 function stringToBigInt(string_val: string): nat {
@@ -71,7 +70,7 @@ function reduceSenderBal(sender: string, amount: string) {
     db.users[sender].Tokens = amount;
 }
 
-
+//transfer function
 $update;
 export function transferTokens(sender: string, receiver: string, amount: number): number {
     let fee: nat = 5n;
@@ -104,8 +103,118 @@ export function transferTokens(sender: string, receiver: string, amount: number)
 
 }
 
+//export database as a string for easy access in the frontend
 $query;
 export function dbAsString(): string{
     const serializedDb=JSON.stringify(db, null, 2);
     return serializedDb;
 }
+*/
+
+import { $query, $update, Record, StableBTreeMap, Principal, Tuple, Vec } from 'azle';
+
+type User = Record<{
+    id: Principal;
+    username: string;
+    tokens: number;
+}>
+
+//created an instance of stable database mapping
+let users = new StableBTreeMap<Principal, User>(0, 100, 1000)
+
+//create user
+$update
+export function createUser(id: Principal, username: string): User {
+    let reward = 100;
+    const user: User = {
+        id,
+        username,
+        tokens: reward
+    }
+
+    users.insert(user.id, user);
+    return user;
+}
+
+//check if user exists
+$query
+export function checkIfUserExists(id: Principal): boolean {
+    return users.containsKey(id);
+}
+
+//check balance
+$query
+export function checkBal(id: Principal): number {
+    const user = users.get(id)
+    const balance = user.Some?.tokens;
+    if (balance!=undefined){
+        return balance;
+    }else{
+        console.log("error in checkBal")
+        return 0;
+    }
+        
+}
+
+async function incReceiverBal(id: Principal, amount: number) {
+    const receiver = users.get(id);
+
+    if (receiver.Some?.id && receiver.Some?.username && receiver.Some?.tokens != undefined) {
+        const modifiedReceiver: User = {
+            id: receiver.Some.id,
+            username: receiver.Some.username,
+            tokens: receiver.Some.tokens
+        }
+//overwrite
+        users.insert(id, modifiedReceiver)
+    } else {
+        console.log("error in incReceiverBal")
+    }
+}
+
+function reduceSenderBal(id: Principal, amount: number) {
+    const sender = users.get(id);
+
+    if (sender.Some?.id && sender.Some?.username && sender.Some?.tokens != undefined) {
+        const modifiedSender: User = {
+            id: sender.Some.id,
+            username: sender.Some.username,
+            tokens: sender.Some.tokens
+        };
+        users.insert(id, modifiedSender);
+    } else {
+        console.log("error in reduceSenderBal");
+    }
+}
+
+//transfer tokens
+$update
+
+export async function transferTokens(sender: Principal, receiver: Principal, amount: number): Promise<number> {
+    let fee: number = 5;
+    let senderBal = await checkBal(sender)
+    let receiverBal = await checkBal(receiver)
+    if (senderBal && receiverBal !== undefined) {
+        if (sender !== receiver) {
+            if (checkIfUserExists(receiver)) {
+                if (senderBal > amount + fee) {
+                    let newSenderBal = senderBal - amount - fee
+                    let newReceiverBal = receiverBal + amount
+                    reduceSenderBal(sender, newSenderBal);
+                    incReceiverBal(receiver, newReceiverBal);
+                    return 1;
+                } else { return 2 }
+            } else { return 3 }
+        } else {
+            return 4
+        }
+    } else { return 0 };
+}
+
+$query
+export function items(): Vec<Tuple<[Principal, User]>>{
+    const allUsers= users.items();
+    return allUsers; 
+}
+
+
