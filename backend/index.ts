@@ -131,7 +131,7 @@ export function createUser(id: Principal, username: string): User {
         username,
         tokens: reward
     }
-
+    if (checkIfUserExists(id)==false)
     users.insert(user.id, user);
     return user;
 }
